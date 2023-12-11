@@ -1,0 +1,28 @@
+{
+  "name": "yt-telegram",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.6.0",
+    "express": "^4.17.1",
+    "lowdb": "^6.1.1",
+    "package-name": "^0.1.0",
+    "redis": "^4.6.11",
+    "telegraf": "^4.15.3",
+    "telegraf-session-local": "^2.1.1",
+    "telegraf-session-redis": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "author": "David Pichsenmeister (dpiTech)",
+  "license": "ISC"
+}
