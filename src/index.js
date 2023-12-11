@@ -248,6 +248,139 @@
 
 
 
+// const { Telegraf, session } = require('telegraf');
+// const path = require('path');
+// const fs = require('fs/promises');
+// require('dotenv').config();
+
+// const SESSIONS_FILE_PATH = path.join(__dirname, 'sessions.json');
+
+// const bot = new Telegraf(process.env.TOKEN);
+
+// // Middleware for onboarding
+// bot.use(async (ctx, next) => {
+//   // Initialize ctx.session if not present
+//   ctx.session = ctx.session || {};
+//   const isNewUser = !ctx.session.isOnboarded;
+
+//   if (isNewUser) {
+//     // Welcome message for new users
+//     await ctx.reply('Welcome to Babylon center! Type /start to begin. For our services type "/services');
+
+//     // Mark the user as onboarded to avoid showing the welcome message again
+//     ctx.session.isOnboarded = true;
+//   }
+
+
+//   // Continue with the next middleware
+//   await next();
+// });
+
+// bot.use(session({
+//   getSessionKey: (ctx) => ctx.from.username || ctx.from.id.toString(),
+//   store: {
+//     async get(key) {
+//       try {
+//         const content = await fs.readFile(SESSIONS_FILE_PATH, 'utf-8');
+//         const sessions = content ? JSON.parse(content) : {};
+//         return sessions[key] || {};
+//       } catch (error) {
+//         console.error('Error reading session data:', error.message);
+//         return {};
+//       }
+//     },
+//     async set(key, session) {
+//       try {
+//         const content = await fs.readFile(SESSIONS_FILE_PATH, 'utf-8');
+//         const sessions = content ? JSON.parse(content) : {};
+//         sessions[key] = session;
+//         await fs.writeFile(SESSIONS_FILE_PATH, JSON.stringify(sessions, null, 2));
+//       } catch (error) {
+//         console.error('Error writing session data:', error.message);
+//       }
+//     },
+//     async delete(key) {
+//       try {
+//         const content = await fs.readFile(SESSIONS_FILE_PATH, 'utf-8');
+//         const sessions = content ? JSON.parse(content) : {};
+//         delete sessions[key];
+//         await fs.writeFile(SESSIONS_FILE_PATH, JSON.stringify(sessions, null, 2));
+//       } catch (error) {
+//         console.error('Error deleting session data:', error.message);
+//       }
+//     },
+//   },
+// }));
+
+// bot.command('services', (ctx) => {
+//   const servicesInfo = `
+//     Babyloncenter offers the following services:
+//     /website creation
+//     /hosting services
+//     /instagram Ads
+//     /web Development Training
+//   `;
+//   ctx.reply(servicesInfo);
+// });
+// // Command to get information about Website Creation
+// bot.command('website', (ctx) => {
+//   const websiteInfo = `
+//     Babyloncenter offers professional website creation services.
+//     Our team of experts will help you design and develop a customized website tailored to your needs.
+//   `;
+//   ctx.reply(websiteInfo);
+// });
+
+// // Command to get information about Hosting Services
+// bot.command('hosting', (ctx) => {
+//   const hostingInfo = `
+//     Babyloncenter provides reliable hosting services to ensure your website is always accessible.
+//     Our hosting plans include features such as high uptime, security, and excellent customer support.
+//   `;
+//   ctx.reply(hostingInfo);
+// });
+
+// // Command to get information about Instagram Ads
+// bot.command('instagram', (ctx) => {
+//   const adsInfo = `
+//     Boost your online presence with Babyloncenter's Instagram Ads services.
+//     We help create and manage effective ad campaigns to reach your target audience on Instagram.
+//   `;
+//   ctx.reply(adsInfo);
+// });
+
+// // Command to get information about Web Development Training
+// bot.command('web', (ctx) => {
+//   const trainingInfo = `
+//     Enhance your web development skills with Babyloncenter's training programs.
+//     Our training sessions cover various topics, from beginner to advanced levels, to help you succeed in web development.
+//   `;
+//   ctx.reply(trainingInfo);
+// });
+
+// // Command to quit (updated for specific services)
+// bot.command('quit', async (ctx) => {
+//   // Check if the chat is a private chat
+//   if (ctx.chat.type === 'private') {
+//     await ctx.reply('You are in a private chat. If you want to stop the bot, you can simply close the chat.');
+//   } else {
+//     // Explicit usage
+//     await ctx.telegram.leaveChat(ctx.message.chat.id);
+
+//     // Using context shortcut
+//     await ctx.leaveChat();
+//   }
+// });
+
+// // ... (other commands and functionalities)
+
+// bot.launch();
+
+// // Enable graceful stop
+// process.once('SIGINT', () => bot.stop('SIGINT'));
+// process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+
 const { Telegraf, session } = require('telegraf');
 const path = require('path');
 const fs = require('fs/promises');
@@ -270,7 +403,6 @@ bot.use(async (ctx, next) => {
     // Mark the user as onboarded to avoid showing the welcome message again
     ctx.session.isOnboarded = true;
   }
-
 
   // Continue with the next middleware
   await next();
@@ -322,6 +454,7 @@ bot.command('services', (ctx) => {
   `;
   ctx.reply(servicesInfo);
 });
+
 // Command to get information about Website Creation
 bot.command('website', (ctx) => {
   const websiteInfo = `
