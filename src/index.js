@@ -645,9 +645,10 @@ bot.command('quit', async (ctx) => {
 // ... (other commands and functionalities)
 
 // Webhook setup for Vercel
+
 const PORT = process.env.PORT || 3000;
-const VERCEL_URL = 'https://your-project-name.vercel.app'; // Replace with your actual URL
-bot.launch({ webhook: { domain: 'https://babylonc-7fljkzwft-mazinabed.vercel.app', port: PORT } });
+const VERCEL_URL = 'https://babylonc-7fljkzwft-mazinabed.vercel.app'; // Replace with your actual URL
+bot.launch({ webhook: { domain: VERCEL_URL, port: PORT } });
 
 
 
