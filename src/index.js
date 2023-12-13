@@ -514,9 +514,11 @@
 // process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
 
+
 const { Telegraf, session } = require('telegraf');
 const path = require('path');
 const fs = require('fs/promises');
+const fetch = require('node-fetch'); // Add this line
 require('dotenv').config();
 
 const SESSIONS_FILE_PATH = path.join(__dirname, 'sessions.json');
@@ -642,16 +644,35 @@ bot.command('quit', async (ctx) => {
   }
 });
 
-// ... (other commands and functionalities)
 
 // Webhook setup for Vercel
-
 const PORT = process.env.PORT || 3000;
 const VERCEL_URL = 'https://babylonc-7fljkzwft-mazinabed.vercel.app'; // Replace with your actual URL
+
+// Use the Telegram Bot API to set the webhook
+async function setWebhook() {
+  const webhookURL = `${VERCEL_URL}/telegraf/${process.env.TOKEN}`; // Adjust the path if needed
+  const apiUrl = `https://api.telegram.org/bot${process.env.TOKEN}/setWebhook?url=${webhookURL}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    if (data.ok) {
+      console.log('Webhook successfully set');
+    } else {
+      console.error('Failed to set the webhook:', data.description);
+    }
+  } catch (error) {
+    console.error('Error setting the webhook:', error.message);
+  }
+}
+
+// Call the setWebhook function
+setWebhook();
+
+// Launch the bot
 bot.launch({ webhook: { domain: VERCEL_URL, port: PORT } });
-
-
-
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
