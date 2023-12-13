@@ -523,7 +523,7 @@ require('dotenv').config();
 
 const SESSIONS_FILE_PATH = path.join(__dirname, 'sessions.json');
 
-const bot = new Telegraf(process.env.TOKEN);
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
 // Middleware for onboarding
 bot.use(async (ctx, next) => {
