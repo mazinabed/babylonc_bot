@@ -9,6 +9,7 @@
     "dotenv": "^8.6.0",
     "express": "^4.17.1",
     "lowdb": "^6.1.1",
+    "node-telegram-bot-api": "^0.64.0",
     "package-name": "^0.1.0",
     "redis": "^4.6.11",
     "telegraf": "^3.40.0",
