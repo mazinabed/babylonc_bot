@@ -651,8 +651,8 @@ const VERCEL_URL = 'https://babylonc-7fljkzwft-mazinabed.vercel.app'; // Replace
 
 // Use the Telegram Bot API to set the webhook
 async function setWebhook() {
-  const webhookURL = `${VERCEL_URL}/telegraf/${process.env.TOKEN}`; // Adjust the path if needed
-  const apiUrl = `https://api.telegram.org/bot${process.env.TOKEN}/setWebhook?url=${webhookURL}`;
+  const webhookURL = `${VERCEL_URL}/telegraf/${process.env.TELEGRAM_BOT_TOKEN}`; // Adjust the path if needed
+  const apiUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/setWebhook?url=${webhookURL}`;
 
   try {
     const response = await fetch(apiUrl);
