@@ -900,81 +900,142 @@
 // main();
 // setInterval(main, 3000);
 
-const express = require('express');
-const app = express();
-const bots = require('node-telegram-bot-api');
+// const express = require('express');
+// const app = express();
+// const bots = require('node-telegram-bot-api');
+// require('dotenv').config();
+// const TOKEN = process.env.TOKEN;
+// const PORT = process.env.PORT || 3000;
+
+// app.use(express.json());
+
+// // Your webhook path, adjust it accordingly
+// const WEBHOOK_PATH = 'https://babylonc-bot.vercel.app';
+
+// const bot = new bots(TOKEN);
+
+// // Set the webhook
+//  bot.setWebHook(`${WEBHOOK_PATH}/api`);
+// // Handle incoming updates from Telegram
+// app.post(WEBHOOK_PATH, (req, res) => {
+//     const body = req.body;
+//     bot.processUpdate(body);
+//     if (req.method === 'POST') {
+//         bot.handleUpdate( res);
+//       } else {
+//         res.status(200).json('Listening to bot events...');
+//       }
+//     // res.sendStatus(200);
+// });
+
+// // Command handling
+// bot.onText(/\/start/, (msg) => {
+//     const chatId = msg.chat.id;
+//     const opts = {
+//         reply_to_message_id: msg.message_id,
+//         reply_markup: JSON.stringify({
+//             keyboard: [
+//                 ['Menu 1', 'Menu 2'],
+//                 ['Back']
+//             ],
+//             resize_keyboard: true,
+//             one_time_keyboard: true
+//         })
+//     };
+//     bot.sendMessage(chatId, 'Welcome! Choose a menu option:', opts);
+// });
+
+// bot.on('message', (msg) => {
+//     const chatId = msg.chat.id;
+//     if (msg.text === 'Back') {
+//         bot.sendMessage(chatId, 'Welcome! Choose a menu option:', {
+//             reply_markup: {
+//                 keyboard: [
+//                     ['Menu 1', 'Menu 2'],
+//                     ['Back']
+//                 ],
+//                 resize_keyboard: true,
+//                 one_time_keyboard: true
+//             }
+//         });
+//     } else if (msg.text === 'Menu 1') {
+//         bot.sendMessage(chatId, 'Menu 1 selected!', {
+//             reply_markup: {
+//                 keyboard: [
+//                     ['Menu 4', 'Menu 5'],
+//                     ['Back']
+//                 ],
+//                 resize_keyboard: true,
+//                 one_time_keyboard: true
+//             }
+//         });
+//     } else if (msg.text === 'Menu 2') {
+//         bot.sendMessage(chatId, 'Menu 2 selected!');
+//     }
+// });
+
+// // Start the Express server
+// app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
+const { Telegraf, Markup } = require('telegraf');
 require('dotenv').config();
-const TOKEN = process.env.TOKEN;
+
+const BOT_TOKEN = process.env.TOKEN;
 const PORT = process.env.PORT || 3000;
+const URL = process.env.URL || 'https://your-ngrok-url.ngrok.io'; // Use ngrok for local testing
 
-app.use(express.json());
+const bot = new Telegraf(process.env.TOKEN);
 
-// Your webhook path, adjust it accordingly
-const WEBHOOK_PATH = 'https://babylonc-bot.vercel.app';
-
-const bot = new bots(TOKEN);
-
-// Set the webhook
- bot.setWebHook(`${WEBHOOK_PATH}/api`);
-// Handle incoming updates from Telegram
-app.post(WEBHOOK_PATH, (req, res) => {
-    const body = req.body;
-    bot.processUpdate(body);
-    if (req.method === 'POST') {
-        bot.handleUpdate( res);
-      } else {
-        res.status(200).json('Listening to bot events...');
-      }
-    // res.sendStatus(200);
+// Start command
+bot.command('start', (ctx) => {
+    const chatId = ctx.chat.id;
+    ctx.reply('Welcome to the main menu!', {
+        reply_markup: Markup.keyboard([
+            ['Services'],
+        ]).resize().extra(),
+    });
 });
 
-// Command handling
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    const opts = {
-        reply_to_message_id: msg.message_id,
-        reply_markup: JSON.stringify({
-            keyboard: [
-                ['Menu 1', 'Menu 2'],
-                ['Back']
-            ],
-            resize_keyboard: true,
-            one_time_keyboard: true
-        })
-    };
-    bot.sendMessage(chatId, 'Welcome! Choose a menu option:', opts);
+// Services command
+bot.command('services', (ctx) => {
+    const chatId = ctx.chat.id;
+    ctx.reply('Choose a service:', {
+        reply_markup: Markup.keyboard([
+            ['Service 1'],
+            ['Service 2'],
+            ['Back'],
+        ]).resize().extra(),
+    });
 });
 
-bot.on('message', (msg) => {
-    const chatId = msg.chat.id;
-    if (msg.text === 'Back') {
-        bot.sendMessage(chatId, 'Welcome! Choose a menu option:', {
-            reply_markup: {
-                keyboard: [
-                    ['Menu 1', 'Menu 2'],
-                    ['Back']
-                ],
-                resize_keyboard: true,
-                one_time_keyboard: true
-            }
-        });
-    } else if (msg.text === 'Menu 1') {
-        bot.sendMessage(chatId, 'Menu 1 selected!', {
-            reply_markup: {
-                keyboard: [
-                    ['Menu 4', 'Menu 5'],
-                    ['Back']
-                ],
-                resize_keyboard: true,
-                one_time_keyboard: true
-            }
-        });
-    } else if (msg.text === 'Menu 2') {
-        bot.sendMessage(chatId, 'Menu 2 selected!');
-    }
+// Handle menu buttons
+bot.hears('Service 1', (ctx) => {
+    ctx.reply('You selected Service 1.');
 });
 
-// Start the Express server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+bot.hears('Service 2', (ctx) => {
+    ctx.reply('You selected Service 2.');
 });
+
+bot.hears('Back', (ctx) => {
+    ctx.reply('Back to the main menu!', {
+        reply_markup: Markup.keyboard([
+            ['Services'],
+        ]).resize().extra(),
+    });
+});
+
+// Set up webhook
+bot.launch({
+    webhook: {
+        domain: `${URL}/bot${BOT_TOKEN}`,
+        port: PORT,
+    },
+});
+
+// Enable graceful stop
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+console.log(`Bot is running at: ${URL}`);
