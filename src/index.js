@@ -910,12 +910,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Your webhook path, adjust it accordingly
-const WEBHOOK_PATH = '/api';
+const WEBHOOK_PATH = 'https://babylonc-bot.vercel.app';
 
 const bot = new bots(TOKEN);
 
 // Set the webhook
-bot.setWebHook(`https://babylonc-bot.vercel.app${WEBHOOK_PATH}`);
+bot.setWebHook(`${WEBHOOK_PATH}`);
 
 // Handle incoming updates from Telegram
 app.post(WEBHOOK_PATH, (req, res) => {
