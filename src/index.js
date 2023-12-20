@@ -760,13 +760,13 @@
 // TELEGRAM_BOT_TOKEN="6774410834:AAFV6Zm50GLpHtscVMjHDPHGPCvG0RylowU"
 // const bot = new Telegraf(TELEGRAM_BOT_TOKEN);
 
-// bot.start((ctx) => ctx.reply('Welcome!', menuMarkup));
+
 
 // const menuMarkup = Markup.keyboard([
 //     ['📝 Menu 1', '🎲 Menu 2'],
 //     ['🏠 Back']
 // ]);
-
+// bot.start((ctx) => ctx.reply('Welcome!', menuMarkup));
 // bot.hears('📝 Menu 1', (ctx) => {
 //     ctx.reply('You chose menu 1.', menuMarkup);
 // });
@@ -790,66 +790,112 @@
 // bot.telegram.setWebhook(`${url}/bot${TELEGRAM_BOT_TOKEN}`);
 // bot.startWebhook(`/bot${TELEGRAM_BOT_TOKEN}`, null, 3000);
 
-const express = require('express');
-const app = express();
-const bots = require('node-telegram-bot-api');
-require('dotenv').config();
-const TOKEN = process.env.TOKEN;
-const PORT = process.env.PORT || 3000;
+// const express = require('express');
+// const app = express();
+// const bots = require('node-telegram-bot-api');
+// require('dotenv').config();
+// const TOKEN = process.env.TOKEN;
+// const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+// app.use(express.json());
 
-app.get('https://babylonc-bot.vercel.app/api', (req, res) => {
-    res.send('Hello World!');
-});
+// app.get('https://babylonc-bot.vercel.app/api', (req, res) => {
+//     res.send('Hello World!');
+// });
 
-const bot = new bots(TOKEN, {polling: true});
+// const bot = new bots(TOKEN, {polling: true});
 
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    const opts = {
-        reply_to_message_id: msg.message_id,
-        reply_markup: JSON.stringify({
-            keyboard: [
-                ['Menu 1', 'Menu 2'],
-                ['Back']
-            ],
-            resize_keyboard: true,
-            one_time_keyboard: true
-        })
-    };
-    bot.sendMessage(chatId, 'Welcome! Choose a menu option:', opts);
-});
+// bot.onText(/\/start/, (msg) => {
+//     const chatId = msg.chat.id;
+//     const opts = {
+//         reply_to_message_id: msg.message_id,
+//         reply_markup: JSON.stringify({
+//             keyboard: [
+//                 ['Menu 1', 'Menu 2'],
+//                 ['Back']
+//             ],
+//             resize_keyboard: true,
+//             one_time_keyboard: true
+//         })
+//     };
+//     bot.sendMessage(chatId, 'Welcome! Choose a menu option:', opts);
+// });
 
-bot.on('message', (msg) => {
-    const chatId = msg.chat.id;
-    if (msg.text === 'Back') {
-        bot.sendMessage(chatId, 'Welcome! Choose a menu option:', {
-            reply_markup: {
-                keyboard: [
-                    ['Menu 1', 'Menu 2'],
-                    ['Back']
-                ],
-                resize_keyboard: true,
-                one_time_keyboard: true
-            }
-        });
-    } else if (msg.text === 'Menu 1') {
-        bot.sendMessage(chatId, 'Menu 1 selected!', {
-            reply_markup: {
-                keyboard: [
-                    ['Menu 4', 'Menu 5'],
-                    ['Back']
-                ],
-                resize_keyboard: true,
-                one_time_keyboard: true
-            }
-        });
-    } else if (msg.text === 'Menu 2') {
-        bot.sendMessage(chatId, 'Menu 2 selected!');
-    }
-});
+// bot.on('message', (msg) => {
+//     const chatId = msg.chat.id;
+//     if (msg.text === 'Back') {
+//         bot.sendMessage(chatId, 'Welcome! Choose a menu option:', {
+//             reply_markup: {
+//                 keyboard: [
+//                     ['Menu 1', 'Menu 2'],
+//                     ['Back']
+//                 ],
+//                 resize_keyboard: true,
+//                 one_time_keyboard: true
+//             }
+//         });
+//     } else if (msg.text === 'Menu 1') {
+//         bot.sendMessage(chatId, 'Menu 1 selected!', {
+//             reply_markup: {
+//                 keyboard: [
+//                     ['Menu 4', 'Menu 5'],
+//                     ['Back']
+//                 ],
+//                 resize_keyboard: true,
+//                 one_time_keyboard: true
+//             }
+//         });
+//     } else if (msg.text === 'Menu 2') {
+//         bot.sendMessage(chatId, 'Menu 2 selected!');
+//     }
+// });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
+
+
+const axios = require('axios');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const apiUrl = `https://api.telegram.org/bot${process.env.TOKEN}/`;
+
+const getUpdates = async () => {
+ const response = await axios.get(`${apiUrl}getUpdates`);
+ return response.data.result;
+};
+
+const sendMessage = async (chatId, text) => {
+ const response = await axios.post(`${apiUrl}sendMessage`, {
+    chat_id: chatId,
+    text: text,
+ });
+ return response.data;
+};
+
+const handleUpdate = async (update) => {
+ const message = update.message;
+ const chatId = message.chat.id;
+
+ if (message.text === '/start') {
+    await sendMessage(chatId, 'Welcome to the menu!');
+ } else if (message.text === 'Back') {
+    await sendMessage(chatId, 'You are back to the menu!');
+ } else {
+    await sendMessage(chatId, 'Unknown command. Type /start or Back.');
+ }
+};
+
+const main = async () => {
+ const updates = await getUpdates();
+ if (updates.length > 0) {
+    const lastUpdateId = updates[updates.length - 1].update_id;
+    await handleUpdate(updates[updates.length - 1]);
+    await axios.get(`${apiUrl}getUpdates?offset=${lastUpdateId + 1}`);
+ }
+};
+
+main();
+setInterval(main, 3000);
