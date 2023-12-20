@@ -983,7 +983,7 @@ require('dotenv').config();
 
 const BOT_TOKEN = process.env.TOKEN;
 const PORT = process.env.PORT || 3000;
-const URL = process.env.URL || 'https://your-ngrok-url.ngrok.io'; // Use ngrok for local testing
+const URL = process.env.URL; // Use ngrok for local testing
 
 const bot = new Telegraf(process.env.TOKEN);
 
@@ -1029,7 +1029,7 @@ bot.hears('Back', (ctx) => {
 // Set up webhook
 bot.launch({
     webhook: {
-        domain: `${URL}/bot${BOT_TOKEN}`,
+        domain: `${URL}/bot${BOT_TOKEN}/api`,
         port: PORT,
     },
 });
