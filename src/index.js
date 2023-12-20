@@ -978,6 +978,63 @@
 // app.listen(PORT, () => {
 //     console.log(`Server is running on port ${PORT}`);
 // });
+// const { Telegraf, Markup } = require('telegraf');
+// require('dotenv').config();
+
+// const BOT_TOKEN = process.env.TOKEN;
+// const PORT = process.env.PORT || 3000;
+// const URL = process.env.URL; // Use ngrok for local testing
+
+// const bot = new Telegraf(process.env.TOKEN);
+
+// // Start command
+// bot.command('start', (ctx) => {
+//     const chatId = ctx.chat.id;
+//     ctx.reply('Welcome to the main menu!', {
+//         reply_markup: Markup.keyboard([
+//             ['Services'],
+//         ]).resize().extra(),
+//     });
+// });
+
+// // Services command
+// bot.command('services', (ctx) => {
+//     const chatId = ctx.chat.id;
+//     ctx.reply('Choose a service:', {
+//         reply_markup: Markup.keyboard([
+//             ['Service 1'],
+//             ['Service 2'],
+//             ['Back'],
+//         ]).resize().extra(),
+//     });
+// });
+
+// // Handle menu buttons
+// bot.hears('Service 1', (ctx) => {
+//     ctx.reply('You selected Service 1.');
+// });
+
+// bot.hears('Service 2', (ctx) => {
+//     ctx.reply('You selected Service 2.');
+// });
+
+// bot.hears('Back', (ctx) => {
+//     ctx.reply('Back to the main menu!', {
+//         reply_markup: Markup.keyboard([
+//             ['Services'],
+//         ]).resize().extra(),
+//     });
+// });
+
+// // Set up webhook
+// bot.launch();
+
+// // Enable graceful stop
+// process.once('SIGINT', () => bot.stop('SIGINT'));
+// process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+// console.log(`Bot is running at: ${URL}`);
+
 const { Telegraf, Markup } = require('telegraf');
 require('dotenv').config();
 
@@ -1001,24 +1058,24 @@ bot.command('start', (ctx) => {
 bot.command('services', (ctx) => {
     const chatId = ctx.chat.id;
     ctx.reply('Choose a service:', {
-        reply_markup: Markup.keyboard([
-            ['Service 1'],
-            ['Service 2'],
-            ['Back'],
+        reply_markup: Markup.inlineKeyboard([
+            Markup.button.callback('Service 1', 'service_1'),
+            Markup.button.callback('Service 2', 'service_2'),
+            Markup.button.callback('Back', 'back'),
         ]).resize().extra(),
     });
 });
 
-// Handle menu buttons
-bot.hears('Service 1', (ctx) => {
+// Handle button clicks
+bot.action('service_1', (ctx) => {
     ctx.reply('You selected Service 1.');
 });
 
-bot.hears('Service 2', (ctx) => {
+bot.action('service_2', (ctx) => {
     ctx.reply('You selected Service 2.');
 });
 
-bot.hears('Back', (ctx) => {
+bot.action('back', (ctx) => {
     ctx.reply('Back to the main menu!', {
         reply_markup: Markup.keyboard([
             ['Services'],
@@ -1029,7 +1086,7 @@ bot.hears('Back', (ctx) => {
 // Set up webhook
 bot.launch({
     webhook: {
-        domain: `${URL}/api`,
+        domain: `${URL}/bot${BOT_TOKEN}/api`,
         port: PORT,
     },
 });
@@ -1037,5 +1094,3 @@ bot.launch({
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
-
-console.log(`Bot is running at: ${URL}`);
