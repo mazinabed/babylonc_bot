@@ -799,7 +799,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('https://babylonc-bot.vercel.app/', (req, res) => {
     res.send('Hello World!');
 });
 
