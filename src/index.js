@@ -1029,7 +1029,7 @@ bot.hears('Back', (ctx) => {
 // Set up webhook
 bot.launch({
     webhook: {
-        domain: `${URL}/bot${BOT_TOKEN}/api`,
+        domain: `${URL}/api`,
         port: PORT,
     },
 });
