@@ -915,13 +915,17 @@ const WEBHOOK_PATH = 'https://babylonc-bot.vercel.app';
 const bot = new bots(TOKEN);
 
 // Set the webhook
-bot.setWebHook(`${WEBHOOK_PATH}`);
-
+ bot.setWebHook(`${WEBHOOK_PATH}/api`);
 // Handle incoming updates from Telegram
 app.post(WEBHOOK_PATH, (req, res) => {
     const body = req.body;
     bot.processUpdate(body);
-    res.sendStatus(200);
+    if (req.method === 'POST') {
+        bot.handleUpdate( res);
+      } else {
+        res.status(200).json('Listening to bot events...');
+      }
+    // res.sendStatus(200);
 });
 
 // Command handling
