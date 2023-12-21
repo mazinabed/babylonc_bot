@@ -1170,48 +1170,108 @@
 //    bot.launch()
    //------------------------------------------------------------------------------
 //   
-const Telegraf = require('telegraf');
-const Extra = require('telegraf/extra');
-const Markup = require('telegraf/markup');
-require('dotenv').config();
-const bot = new Telegraf(process.env.TOKEN);
+// const Telegraf = require('telegraf');
+// const Extra = require('telegraf/extra');
+// const Markup = require('telegraf/markup');
+// require('dotenv').config();
+// const bot = new Telegraf(process.env.TOKEN);
 
-bot.start((ctx) => ctx.reply('Welcome!', mainMenu()));
+// bot.start((ctx) => ctx.reply('Welcome!', mainMenu()));
 
-function mainMenu() {
-    return Markup.keyboard([
-        ['📢 New post', '🔍 Search'],
-        ['🔁 Back', '❌ Cancel']
-    ])
-    .resize()
-    .extra();
-}
+// function mainMenu() {
+//     return Markup.keyboard([
+//         ['📢 New post', '🔍 Search'],
+//         ['🔁 Back', '❌ Cancel']
+//     ])
+//     .resize()
+//     .extra();
+// }
 
-bot.action('📢 New post', (ctx) => {
-    ctx.reply('New post');
+// bot.action('📢 New post', (ctx) => {
+//     ctx.reply('New post');
+// });
+
+// bot.action('🔍 Search', (ctx) => {
+//     ctx.reply('Search');
+// });
+
+// bot.action('🔁 Back', (ctx) => {
+//     ctx.reply('Back to main menu', mainMenu());
+// });
+
+// bot.action('❌ Cancel', (ctx) => {
+//     ctx.reply('Operation canceled');
+// });
+
+// bot.hears('❌ Cancel', (ctx) => {
+//     ctx.reply('Operation canceled');
+// });
+
+// bot.on('text', (ctx) => {
+//     ctx.reply('Unknown command, please use buttons', mainMenu());
+// });
+
+// bot.launch();
+
+// process.once('SIGINT', () => bot.stop('SIGINT'));
+// process.once('SIGTERM', () => bot.stop('SIGTERM'));
+const express = require('express');
+const axios = require('axios');
+const qs = require('querystring');
+
+const app = express();
+
+const api_key = (process.env.TOKEN);
+const bot_url = `https://api.telegram.org/bot${api_key}`;
+
+app.use(express.json());
+
+app.get('/', (req, res) => {
+ res.send('Hello World!');
 });
 
-bot.action('🔍 Search', (ctx) => {
-    ctx.reply('Search');
+app.post('/' + api_key, async (req, res) => {
+ const update = req.body;
+ const chatId = update.message.chat.id;
+ const text = update.message.text;
+
+ if (text === '/start') {
+    await axios.post(bot_url + '/sendMessage', {
+      chat_id: chatId,
+      text: 'Welcome to our bot!',
+      reply_markup: JSON.stringify({
+        inline_keyboard: [
+          [
+            { text: 'Menu 1', callback_data: 'menu1' },
+            { text: 'Menu 2', callback_data: 'menu2' },
+          ],
+          [{ text: 'Back', callback_data: 'back' }],
+        ],
+      }),
+    });
+ } else if (text.includes('menu1')) {
+    // Code for Menu 1
+ } else if (text.includes('menu2')) {
+    // Code for Menu 2
+ } else if (text.includes('back')) {
+    await axios.post(bot_url + '/sendMessage', {
+      chat_id: chatId,
+      text: 'Welcome back to the main menu!',
+      reply_markup: JSON.stringify({
+        inline_keyboard: [
+          [
+            { text: 'Menu 1', callback_data: 'menu1' },
+            { text: 'Menu 2', callback_data: 'menu2' },
+          ],
+          [{ text: 'Back', callback_data: 'back' }],
+        ],
+      }),
+    });
+ }
+
+ res.sendStatus(200);
 });
 
-bot.action('🔁 Back', (ctx) => {
-    ctx.reply('Back to main menu', mainMenu());
+app.listen(process.env.PORT || 3000, () => {
+ console.log('Server is running...');
 });
-
-bot.action('❌ Cancel', (ctx) => {
-    ctx.reply('Operation canceled');
-});
-
-bot.hears('❌ Cancel', (ctx) => {
-    ctx.reply('Operation canceled');
-});
-
-bot.on('text', (ctx) => {
-    ctx.reply('Unknown command, please use buttons', mainMenu());
-});
-
-bot.launch();
-
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
