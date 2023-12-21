@@ -1181,7 +1181,7 @@ const webhookUrl = WEBHOOK_URL; // Use the ngrok URL
 
 const bot = new Telegraf(botToken);
 const app = express();
-app.get('/api', (req, res) =>
+app.get('/', (req, res) =>
 res.status(200).json('Listening to bot events...')
 );
 
@@ -1246,9 +1246,9 @@ bot.start((ctx)=>{
             }
             
             })
-           // https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}
+
 // Set up the webhook
-bot.telegram.setWebhook(`https://api.telegram.org/bot${botToken}/setWebhook?url=${webhookUrl}`);
+bot.telegram.setWebhook(`${webhookUrl}/bot${botToken}/api`);
 app.use(bot.webhookCallback(`/bot${botToken}`));
 
 // Start the Express server
