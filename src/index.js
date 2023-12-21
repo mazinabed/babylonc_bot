@@ -1035,62 +1035,94 @@
 
 // console.log(`Bot is running at: ${URL}`);
 
-const { Telegraf, Markup } = require('telegraf');
+// const { Telegraf, Markup } = require('telegraf');
+// require('dotenv').config();
+
+// const BOT_TOKEN = process.env.TOKEN;
+// const PORT = process.env.PORT || 3000;
+// const URL = process.env.URL; // Use ngrok for local testing
+
+// const bot = new Telegraf(process.env.TOKEN);
+
+// // Start command
+// bot.command('start', (ctx) => {
+//     const chatId = ctx.chat.id;
+//     ctx.reply('Welcome to the main menu!', {
+//         reply_markup: Markup.keyboard([
+//             ['Services'],
+//         ]).resize().extra(),
+//     });
+// });
+
+// // Services command
+// bot.command('services', (ctx) => {
+//     const chatId = ctx.chat.id;
+//     ctx.reply('Choose a service:', {
+//         reply_markup: Markup.inlineKeyboard([
+//             Markup.button.callback('Service 1', 'service_1'),
+//             Markup.button.callback('Service 2', 'service_2'),
+//             Markup.button.callback('Back', 'back'),
+//         ]).resize().extra(),
+//     });
+// });
+
+// // Handle button clicks
+// bot.action('service_1', (ctx) => {
+//     ctx.reply('You selected Service 1.');
+// });
+
+// bot.action('service_2', (ctx) => {
+//     ctx.reply('You selected Service 2.');
+// });
+
+// bot.action('back', (ctx) => {
+//     ctx.reply('Back to the main menu!', {
+//         reply_markup: Markup.keyboard([
+//             ['Services'],
+//         ]).resize().extra(),
+//     });
+// });
+
+// // Set up webhook
+// bot.launch({
+//     webhook: {
+//         domain: `${URL}/bot${BOT_TOKEN}/api`,
+//         port: PORT,
+//     },
+// });
+
+// // Enable graceful stop
+// process.once('SIGINT', () => bot.stop('SIGINT'));
+// process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+
+const { Telegraf } = require('telegraf');
+const express = require('express');
 require('dotenv').config();
 
-const BOT_TOKEN = process.env.TOKEN;
-const PORT = process.env.PORT || 3000;
-const URL = process.env.URL; // Use ngrok for local testing
+const botToken = process.env.TOKEN;
+const port = process.env.PORT || 3000;
 
-const bot = new Telegraf(process.env.TOKEN);
+WEBHOOK_URL='https://babylonc-hv4xh7gfe-mazinabed.vercel.app'
+const webhookUrl = WEBHOOK_URL; // Use the ngrok URL
 
-// Start command
-bot.command('start', (ctx) => {
-    const chatId = ctx.chat.id;
-    ctx.reply('Welcome to the main menu!', {
-        reply_markup: Markup.keyboard([
-            ['Services'],
-        ]).resize().extra(),
-    });
+const bot = new Telegraf(botToken);
+const app = express();
+
+// Your bot logic...
+
+// Set up the webhook
+bot.telegram.setWebhook(`${webhookUrl}/bot${botToken}/api`);
+app.use(bot.webhookCallback(`/bot${botToken}`));
+
+// Start the Express server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`)
+
+
+    console.log(`Server is running on port ${port}`);
 });
 
-// Services command
-bot.command('services', (ctx) => {
-    const chatId = ctx.chat.id;
-    ctx.reply('Choose a service:', {
-        reply_markup: Markup.inlineKeyboard([
-            Markup.button.callback('Service 1', 'service_1'),
-            Markup.button.callback('Service 2', 'service_2'),
-            Markup.button.callback('Back', 'back'),
-        ]).resize().extra(),
-    });
-});
 
-// Handle button clicks
-bot.action('service_1', (ctx) => {
-    ctx.reply('You selected Service 1.');
-});
-
-bot.action('service_2', (ctx) => {
-    ctx.reply('You selected Service 2.');
-});
-
-bot.action('back', (ctx) => {
-    ctx.reply('Back to the main menu!', {
-        reply_markup: Markup.keyboard([
-            ['Services'],
-        ]).resize().extra(),
-    });
-});
-
-// Set up webhook
-bot.launch({
-    webhook: {
-        domain: `${URL}/bot${BOT_TOKEN}/api`,
-        port: PORT,
-    },
-});
-
-// Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+// Start the bot
+bot.launch();
