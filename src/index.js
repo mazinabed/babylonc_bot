@@ -1176,7 +1176,7 @@ require('dotenv').config();
 const botToken = process.env.TOKEN;
 const port = process.env.PORT || 3000;
 
-WEBHOOK_URL='https://babylonc-bot.vercel.app'
+WEBHOOK_URL='https://babylonc-bot.vercel.app/api'
 const webhookUrl = WEBHOOK_URL; // Use the ngrok URL
 
 const bot = new Telegraf(botToken);
@@ -1248,7 +1248,7 @@ bot.start((ctx)=>{
             })
 
 // Set up the webhook
-bot.telegram.setWebhook(`${webhookUrl}/bot${botToken}/api`);
+bot.telegram.setWebhook(`${webhookUrl}/bot${botToken}`);
 app.use(bot.webhookCallback(`/bot${botToken}`));
 
 // Start the Express server
