@@ -1176,7 +1176,7 @@ require('dotenv').config();
 const botToken = process.env.TOKEN;
 const port = process.env.PORT || 3000;
 
-WEBHOOK_URL='https://babylonc-hv4xh7gfe-mazinabed.vercel.app'
+WEBHOOK_URL='https://babylonc-bot.vercel.app'
 const webhookUrl = WEBHOOK_URL; // Use the ngrok URL
 
 const bot = new Telegraf(botToken);
