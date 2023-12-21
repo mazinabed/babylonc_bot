@@ -1096,7 +1096,80 @@
 // process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
 
-const { Telegraf } = require('telegraf');
+
+//  const Telegraf = require('telegraf');
+//  const website = require("./website")
+//   require('dotenv').config();
+//    const bot = new Telegraf(process.env.TOKEN);
+
+
+// //    const servicesInfo = [
+// //     'Website',
+// //     'Telegram Bot'
+// //    ]
+//    bot.start((ctx)=>{
+//     bot.telegram.sendMessage(ctx.chat.id, "Hello word",
+//     {
+//         reply_markup:{
+//             inline_keyboard:[
+//             [{text:"Website", callback_data:"Website"}, {text:'Telegram Bot',callback_data:'TelBot'}] 
+//         ,[{text:'Telegram Bot',callback_data:'TelBot'}]
+//         ],
+      
+//         } 
+//     }
+//     )
+//    })
+  
+//    bot.on("callback_query", (ctx)=>{
+//     //bot.telegram.sendMessage(ctx.chat.id, "Hello word", )
+
+//      if(ctx.update.callback_query.data=="Website"){
+//         ctx.reply(`
+//         خدمات تطوير الويب تشمل إنشاء وتحسين المواقع الإلكترونية بتصميم سهل الاستخدام وجذاب. تهدف لتحسين تجربة المستخدم وتعزيز الوجود الرقمي للشركات عبر الإنترنت.
+//         Web development services encompass the creation and enhancement of websites with user-friendly and attractive designs. The goal is to improve the user experience and enhance the digital presence of businesses online.  
+
+//       `,{
+//         reply_markup:{
+//             inline_keyboard:[
+//             [{text:"Start", callback_data:"Start"}] 
+//         ,[{text:'Telegram Bot',callback_data:'TelBot'},{text:"Website", callback_data:"Website"}]
+//         ],
+      
+//         } 
+//       })
+
+//         }else if(ctx.update.callback_query.data=='TelBot'){
+//             ctx.reply(`You can contact me on Telegram by sending a message `,
+//             {
+//                 reply_markup:{
+//                     inline_keyboard:[
+//                     [{text:"Start", callback_data:"Start"}] 
+//                 ,[{text:'Telegram Bot',callback_data:'TelBot'},{text:"Website", callback_data:"Website"}]
+//                 ],
+              
+//                 } 
+//               }
+              
+            
+//             )}else if (ctx.update.callback_query.data=='Start'){
+//                 bot.telegram.sendMessage(ctx.chat.id, "Hello word",
+//                 {
+//                     reply_markup:{
+//                         inline_keyboard:[
+//                         [{text:"Website", callback_data:"Website"}, {text:'Telegram Bot',callback_data:'TelBot'}] 
+//                     ,[{text:'Telegram Bot',callback_data:'TelBot'}]
+//                     ],
+                  
+//                     } 
+//                 }
+//                 )
+//             }
+            
+//             })
+//    bot.launch()
+   //------------------------------------------------------------------------------
+   const { Telegraf } = require('telegraf');
 const express = require('express');
 require('dotenv').config();
 
@@ -1110,6 +1183,66 @@ const bot = new Telegraf(botToken);
 const app = express();
 
 // Your bot logic...
+bot.start((ctx)=>{
+    bot.telegram.sendMessage(ctx.chat.id, "Hello word",
+    {
+        reply_markup:{
+            inline_keyboard:[
+            [{text:"Website", callback_data:"Website"}, {text:'Telegram Bot',callback_data:'TelBot'}] 
+        ,[{text:'Telegram Bot',callback_data:'TelBot'}]
+        ],
+      
+        } 
+    }
+    )
+   })
+  
+   bot.on("callback_query", (ctx)=>{
+    //bot.telegram.sendMessage(ctx.chat.id, "Hello word", )
+
+     if(ctx.update.callback_query.data=="Website"){
+        ctx.reply(`
+        خدمات تطوير الويب تشمل إنشاء وتحسين المواقع الإلكترونية بتصميم سهل الاستخدام وجذاب. تهدف لتحسين تجربة المستخدم وتعزيز الوجود الرقمي للشركات عبر الإنترنت.
+        Web development services encompass the creation and enhancement of websites with user-friendly and attractive designs. The goal is to improve the user experience and enhance the digital presence of businesses online.  
+
+      `,{
+        reply_markup:{
+            inline_keyboard:[
+            [{text:"Start", callback_data:"Start"}] 
+        ,[{text:'Telegram Bot',callback_data:'TelBot'},{text:"Website", callback_data:"Website"}]
+        ],
+      
+        } 
+      })
+
+        }else if(ctx.update.callback_query.data=='TelBot'){
+            ctx.reply(`You can contact me on Telegram by sending a message `,
+            {
+                reply_markup:{
+                    inline_keyboard:[
+                    [{text:"Start", callback_data:"Start"}] 
+                ,[{text:'Telegram Bot',callback_data:'TelBot'},{text:"Website", callback_data:"Website"}]
+                ],
+              
+                } 
+              }
+              
+            
+            )}else if (ctx.update.callback_query.data=='Start'){
+                bot.telegram.sendMessage(ctx.chat.id, "Hello word",
+                {
+                    reply_markup:{
+                        inline_keyboard:[
+                        [{text:"Website", callback_data:"Website"}, {text:'Telegram Bot',callback_data:'TelBot'}] 
+                    ,[{text:'Telegram Bot',callback_data:'TelBot'}]
+                    ],
+                  
+                    } 
+                }
+                )
+            }
+            
+            })
 
 // Set up the webhook
 bot.telegram.setWebhook(`${webhookUrl}/bot${botToken}/api`);
