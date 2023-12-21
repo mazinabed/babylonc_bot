@@ -1181,6 +1181,9 @@ const webhookUrl = WEBHOOK_URL; // Use the ngrok URL
 
 const bot = new Telegraf(botToken);
 const app = express();
+app.get('/', (req, res) =>
+res.status(200).json('Listening to bot events...')
+);
 
 // Your bot logic...
 bot.start((ctx)=>{
