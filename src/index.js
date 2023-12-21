@@ -1248,7 +1248,7 @@ bot.start((ctx)=>{
             })
 
 // Set up the webhook
-bot.telegram.setWebhook(`${webhookUrl}/bot${botToken}/api`);
+bot.telegram.setWebhook(`${webhookUrl}/api`);
 app.use(bot.webhookCallback(`/bot${botToken}`));
 
 // Start the Express server
