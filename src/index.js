@@ -1169,96 +1169,49 @@
 //             })
 //    bot.launch()
    //------------------------------------------------------------------------------
-   const { Telegraf } = require('telegraf');
-const express = require('express');
+//   
+const Telegraf = require('telegraf');
+const Extra = require('telegraf/extra');
+const Markup = require('telegraf/markup');
 require('dotenv').config();
+const bot = new Telegraf(process.env.TOKEN);
 
-const botToken = process.env.TOKEN;
-const port = process.env.PORT || 3000;
+bot.start((ctx) => ctx.reply('Welcome!', mainMenu()));
 
-WEBHOOK_URL='https://babylonc-bot.vercel.app'
-const webhookUrl = WEBHOOK_URL; // Use the ngrok URL
+function mainMenu() {
+    return Markup.keyboard([
+        ['📢 New post', '🔍 Search'],
+        ['🔁 Back', '❌ Cancel']
+    ])
+    .resize()
+    .extra();
+}
 
-const bot = new Telegraf(botToken);
-const app = express();
-app.get('/', (req, res) =>
-res.status(200).json('Listening to bot events...')
-);
-
-// Your bot logic...
-bot.start((ctx)=>{
-    bot.telegram.sendMessage(ctx.chat.id, "Hello word",
-    {
-        reply_markup:{
-            inline_keyboard:[
-            [{text:"Website", callback_data:"Website"}, {text:'Telegram Bot',callback_data:'TelBot'}] 
-        ,[{text:'Telegram Bot',callback_data:'TelBot'}]
-        ],
-      
-        } 
-    }
-    )
-   })
-  
-   bot.on("callback_query", (ctx)=>{
-    //bot.telegram.sendMessage(ctx.chat.id, "Hello word", )
-
-     if(ctx.update.callback_query.data=="Website"){
-        ctx.reply(`
-        خدمات تطوير الويب تشمل إنشاء وتحسين المواقع الإلكترونية بتصميم سهل الاستخدام وجذاب. تهدف لتحسين تجربة المستخدم وتعزيز الوجود الرقمي للشركات عبر الإنترنت.
-        Web development services encompass the creation and enhancement of websites with user-friendly and attractive designs. The goal is to improve the user experience and enhance the digital presence of businesses online.  
-
-      `,{
-        reply_markup:{
-            inline_keyboard:[
-            [{text:"Start", callback_data:"Start"}] 
-        ,[{text:'Telegram Bot',callback_data:'TelBot'},{text:"Website", callback_data:"Website"}]
-        ],
-      
-        } 
-      })
-
-        }else if(ctx.update.callback_query.data=='TelBot'){
-            ctx.reply(`You can contact me on Telegram by sending a message `,
-            {
-                reply_markup:{
-                    inline_keyboard:[
-                    [{text:"Start", callback_data:"Start"}] 
-                ,[{text:'Telegram Bot',callback_data:'TelBot'},{text:"Website", callback_data:"Website"}]
-                ],
-              
-                } 
-              }
-              
-            
-            )}else if (ctx.update.callback_query.data=='Start'){
-                bot.telegram.sendMessage(ctx.chat.id, "Hello word",
-                {
-                    reply_markup:{
-                        inline_keyboard:[
-                        [{text:"Website", callback_data:"Website"}, {text:'Telegram Bot',callback_data:'TelBot'}] 
-                    ,[{text:'Telegram Bot',callback_data:'TelBot'}]
-                    ],
-                  
-                    } 
-                }
-                )
-            }
-            
-            })
-
-// Set up the webhook
-bot.telegram.setWebhook(`${webhookUrl}/api`);
-app.use(bot.webhookCallback(`/bot${botToken}`));
-
-// Start the Express server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`)
-
-
-    console.log(`Server is running on port ${port}`);
+bot.action('📢 New post', (ctx) => {
+    ctx.reply('New post');
 });
 
+bot.action('🔍 Search', (ctx) => {
+    ctx.reply('Search');
+});
 
-// Start the bot
+bot.action('🔁 Back', (ctx) => {
+    ctx.reply('Back to main menu', mainMenu());
+});
+
+bot.action('❌ Cancel', (ctx) => {
+    ctx.reply('Operation canceled');
+});
+
+bot.hears('❌ Cancel', (ctx) => {
+    ctx.reply('Operation canceled');
+});
+
+bot.on('text', (ctx) => {
+    ctx.reply('Unknown command, please use buttons', mainMenu());
+});
+
 bot.launch();
+
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
