@@ -1241,7 +1241,7 @@ app.post('/' + api_key + '/api', async (req, res) => {
  const text = update.message.text;
 
  if (text === '/start') {
-    await axios.post(bot_url + '/api', {
+    await axios.post(bot_url + '/https://babylonc-bot.vercel.app', {
       chat_id: chatId,
       text: 'Welcome to our bot!',
       reply_markup: JSON.stringify({
