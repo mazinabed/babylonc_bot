@@ -1,2 +1,8 @@
 
+  {
+    "routes": [
+      { "src": "/webhook-endpoint", "dest": "https://babylonc-bot.vercel.app" },
+      { "src": "/(.*)", "dest": "/$1" }
+    ]
+  }
   
