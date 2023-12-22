@@ -1340,7 +1340,7 @@ bot.on('text', async (ctx) => {
 bot.launch({
   webhook: {
     // Public domain for webhook; e.g.: example.com
-    domain: "https://babylonc-bot.vercel.app/",
+    domain: "https://babylonc-bot.vercel.app/api",
 
     // Port to listen on; e.g.: 8080
     port: 3000,
