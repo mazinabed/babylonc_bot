@@ -1230,9 +1230,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'));
 });
 
-app.post('/' + api_key, async (req, res) => {
+app.post('/' + api_key + '/api', async (req, res) => {
  const update = req.body;
- 
+
  const chatId = update.message.chat.id;
  const text = update.message.text;
 
