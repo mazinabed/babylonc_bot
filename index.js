@@ -1218,7 +1218,7 @@
 const express = require('express');
 const axios = require('axios');
 const qs = require('querystring');
-
+const path = require("path")
 const app = express();
 
 const api_key = (process.env.TOKEN);
@@ -1227,11 +1227,12 @@ const bot_url = `https://api.telegram.org/bot${api_key}`;
 app.use(express.json());
 
 app.get('/', (req, res) => {
- res.send('Hello World!');
+  res.sendFile(path.join(__dirname, '/index.html'));
 });
 
 app.post('/' + api_key, async (req, res) => {
  const update = req.body;
+ 
  const chatId = update.message.chat.id;
  const text = update.message.text;
 
