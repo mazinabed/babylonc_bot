@@ -1217,69 +1217,69 @@
 
 // bot.launch();
 
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
-const express = require('express');
-const axios = require('axios');
-const qs = require('querystring');
-const path = require("path")
-const app = express();
+// process.once('SIGINT', () => bot.stop('SIGINT'));
+// process.once('SIGTERM', () => bot.stop('SIGTERM'));
+// const express = require('express');
+// const axios = require('axios');
+// const qs = require('querystring');
+// const path = require("path")
+// const app = express();
 
-const api_key = (process.env.TOKEN);
-const bot_url = `https://api.telegram.org/bot${api_key}`;
+// const api_key = (process.env.TOKEN);
+// const bot_url = `https://api.telegram.org/bot${api_key}`;
 
-app.use(express.json());
+// app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/index.html'));
-});
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '/index.html'));
+// });
 
-app.post('/' + api_key + '/api', async (req, res) => {
- const update = req.body;
+// app.post('/' + api_key + '/api', async (req, res) => {
+//  const update = req.body;
 
- const chatId = update.message.chat.id;
- const text = update.message.text;
+//  const chatId = update.message.chat.id;
+//  const text = update.message.text;
 
- if (text === '/start') {
-    await axios.post(bot_url + '/https://babylonc-bot.vercel.app', {
-      chat_id: chatId,
-      text: 'Welcome to our bot!',
-      reply_markup: JSON.stringify({
-        inline_keyboard: [
-          [
-            { text: 'Menu 1', callback_data: 'menu1' },
-            { text: 'Menu 2', callback_data: 'menu2' },
-          ],
-          [{ text: 'Back', callback_data: 'back' }],
-        ],
-      }),
-    });
- } else if (text.includes('menu1')) {
-    // Code for Menu 1
- } else if (text.includes('menu2')) {
-    // Code for Menu 2
- } else if (text.includes('back')) {
-    await axios.post(bot_url + '/sendMessage', {
-      chat_id: chatId,
-      text: 'Welcome back to the main menu!',
-      reply_markup: JSON.stringify({
-        inline_keyboard: [
-          [
-            { text: 'Menu 1', callback_data: 'menu1' },
-            { text: 'Menu 2', callback_data: 'menu2' },
-          ],
-          [{ text: 'Back', callback_data: 'back' }],
-        ],
-      }),
-    });
- }
+//  if (text === '/start') {
+//     await axios.post(bot_url + '/sendMessage', {
+//       chat_id: chatId,
+//       text: 'Welcome to our bot!',
+//       reply_markup: JSON.stringify({
+//         inline_keyboard: [
+//           [
+//             { text: 'Menu 1', callback_data: 'menu1' },
+//             { text: 'Menu 2', callback_data: 'menu2' },
+//           ],
+//           [{ text: 'Back', callback_data: 'back' }],
+//         ],
+//       }),
+//     });
+//  } else if (text.includes('menu1')) {
+//     // Code for Menu 1
+//  } else if (text.includes('menu2')) {
+//     // Code for Menu 2
+//  } else if (text.includes('back')) {
+//     await axios.post(bot_url + '/sendMessage', {
+//       chat_id: chatId,
+//       text: 'Welcome back to the main menu!',
+//       reply_markup: JSON.stringify({
+//         inline_keyboard: [
+//           [
+//             { text: 'Menu 1', callback_data: 'menu1' },
+//             { text: 'Menu 2', callback_data: 'menu2' },
+//           ],
+//           [{ text: 'Back', callback_data: 'back' }],
+//         ],
+//       }),
+//     });
+//  }
 
- res.sendStatus(200);
-});
+//  res.sendStatus(200);
+// });
 
-app.listen(process.env.PORT || 3000, () => {
- console.log('Server is running...');
- });
+// app.listen(process.env.PORT || 3000, () => {
+//  console.log('Server is running...');
+// // });
 
 // require('dotenv').config();
 // const axios = require('axios');
@@ -1338,3 +1338,29 @@ app.listen(process.env.PORT || 3000, () => {
 // });
 
 // bot.launch();
+
+import { Telegraf } from "telegraf";
+import { message } from 'telegraf/filters';
+
+const bot = new Telegraf(process.env.TOKEN);
+
+bot.on(message("text"), ctx => ctx.reply("Hello"));
+
+// Start webhook via launch method (preferred)
+bot.launch({
+  webhook: {
+    // Public domain for webhook; e.g.: example.com
+    domain: "https://babylonc-bot.vercel.app/",
+
+    // Port to listen on; e.g.: 8080
+    port: 3000,
+
+    // Optional path to listen for.
+    // `bot.secretPathComponent()` will be used by default
+   // path: webhookPath,
+
+    // Optional secret to be sent back in a header for security.
+    // e.g.: `crypto.randomBytes(64).toString("hex")`
+    //secretToken: randomAlphaNumericString,
+  },
+});
