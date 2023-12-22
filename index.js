@@ -900,84 +900,88 @@
 // main();
 // setInterval(main, 3000);
 
-const express = require('express');
-const app = express();
-const bots = require('node-telegram-bot-api');
-require('dotenv').config();
-const TOKEN = process.env.TOKEN;
-const PORT = process.env.PORT || 3000;
+// const express = require('express');
+// const app = express();
+// const bots = require('node-telegram-bot-api');
+// require('dotenv').config();
+// const TOKEN = process.env.TOKEN;
+// const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+// app.use(express.json());
 
-// Your webhook path, adjust it accordingly
-const WEBHOOK_PATH = 'https://babylonc-bot.vercel.app';
+// // Your webhook path, adjust it accordingly
+// const WEBHOOK_PATH = 'https://babylonc-bot.vercel.app';
 
-const bot = new bots(TOKEN);
+// const bot = new bots(TOKEN);
 
-// Set the webhook
- bot.setWebHook(`${WEBHOOK_PATH}/api`);
-// Handle incoming updates from Telegram
-app.post(WEBHOOK_PATH, (req, res) => {
-    const body = req.body;
-    bot.processUpdate(body);
-    if (req.method === 'POST') {
-        bot.handleUpdate( res);
-      } else {
-        res.status(200).json('Listening to bot events...');
-      }
-    // res.sendStatus(200);
-});
+// // Set the webhook
+//  bot.setWebHook(`${WEBHOOK_PATH}/api`);
+// // Handle incoming updates from Telegram
+// app.post(WEBHOOK_PATH, (req, res) => {
+//     const body = req.body;
+//     bot.processUpdate(body);
+//     if (req.method === 'POST') {
+//         bot.handleUpdate( res);
+//       } else {
+//         res.status(200).json('Listening to bot events...');
+//       }
+//     // res.sendStatus(200);
+// });
 
-// Command handling
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    const opts = {
-        reply_to_message_id: msg.message_id,
-        reply_markup: JSON.stringify({
-            keyboard: [
-                ['Menu 1', 'Menu 2'],
-                ['Back']
-            ],
-            resize_keyboard: true,
-            one_time_keyboard: true
-        })
-    };
-    bot.sendMessage(chatId, 'Welcome! Choose a menu option:', opts);
-});
+// // Command handling
+// bot.onText(/\/start/, (msg) => {
+//     const chatId = msg.chat.id;
+//     const opts = {
+//         reply_to_message_id: msg.message_id,
+//         reply_markup: JSON.stringify({
+//             keyboard: [
+//                 ['Menu 1', 'Menu 2'],
+//                 ['Back']
+//             ],
+//             resize_keyboard: true,
+//             one_time_keyboard: true
+//         })
+//     };
+//     bot.sendMessage(chatId, 'Welcome! Choose a menu option:', opts);
+// });
 
-bot.on('message', (msg) => {
-    const chatId = msg.chat.id;
-    if (msg.text === 'Back') {
-        bot.sendMessage(chatId, 'Welcome! Choose a menu option:', {
-            reply_markup: {
-                keyboard: [
-                    ['Menu 1', 'Menu 2'],
-                    ['Back']
-                ],
-                resize_keyboard: true,
-                one_time_keyboard: true
-            }
-        });
-    } else if (msg.text === 'Menu 1') {
-        bot.sendMessage(chatId, 'Menu 1 selected!', {
-            reply_markup: {
-                keyboard: [
-                    ['Menu 4', 'Menu 5'],
-                    ['Back']
-                ],
-                resize_keyboard: true,
-                one_time_keyboard: true
-            }
-        });
-    } else if (msg.text === 'Menu 2') {
-        bot.sendMessage(chatId, 'Menu 2 selected!');
-    }
-});
+// bot.on('message', (msg) => {
+//     const chatId = msg.chat.id;
+//     if (msg.text === 'Back') {
+//         bot.sendMessage(chatId, 'Welcome! Choose a menu option:', {
+//             reply_markup: {
+//                 keyboard: [
+//                     ['Menu 1', 'Menu 2'],
+//                     ['Back']
+//                 ],
+//                 resize_keyboard: true,
+//                 one_time_keyboard: true
+//             }
+//         });
+//     } else if (msg.text === 'Menu 1') {
+//         bot.sendMessage(chatId, 'Menu 1 selected!', {
+//             reply_markup: {
+//                 keyboard: [
+//                     ['Menu 4', 'Menu 5'],
+//                     ['Back']
+//                 ],
+//                 resize_keyboard: true,
+//                 one_time_keyboard: true
+//             }
+//         });
+//     } else if (msg.text === 'Menu 2') {
+//         bot.sendMessage(chatId, 'Menu 2 selected!');
+//     }
+// });
 
-// Start the Express server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// // Start the Express server
+// app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+//});
+
+
+
+
 // const { Telegraf, Markup } = require('telegraf');
 // require('dotenv').config();
 
@@ -1213,66 +1217,124 @@ app.listen(PORT, () => {
 
 // bot.launch();
 
-// process.once('SIGINT', () => bot.stop('SIGINT'));
-// process.once('SIGTERM', () => bot.stop('SIGTERM'));
-// const express = require('express');
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
+const express = require('express');
+const axios = require('axios');
+const qs = require('querystring');
+const path = require("path")
+const app = express();
+
+const api_key = (process.env.TOKEN);
+const bot_url = `https://api.telegram.org/bot${api_key}`;
+
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/index.html'));
+});
+
+app.post('/' + api_key + '/api', async (req, res) => {
+ const update = req.body;
+
+ const chatId = update.message.chat.id;
+ const text = update.message.text;
+
+ if (text === '/start') {
+    await axios.post(bot_url + '/sendMessage', {
+      chat_id: chatId,
+      text: 'Welcome to our bot!',
+      reply_markup: JSON.stringify({
+        inline_keyboard: [
+          [
+            { text: 'Menu 1', callback_data: 'menu1' },
+            { text: 'Menu 2', callback_data: 'menu2' },
+          ],
+          [{ text: 'Back', callback_data: 'back' }],
+        ],
+      }),
+    });
+ } else if (text.includes('menu1')) {
+    // Code for Menu 1
+ } else if (text.includes('menu2')) {
+    // Code for Menu 2
+ } else if (text.includes('back')) {
+    await axios.post(bot_url + '/sendMessage', {
+      chat_id: chatId,
+      text: 'Welcome back to the main menu!',
+      reply_markup: JSON.stringify({
+        inline_keyboard: [
+          [
+            { text: 'Menu 1', callback_data: 'menu1' },
+            { text: 'Menu 2', callback_data: 'menu2' },
+          ],
+          [{ text: 'Back', callback_data: 'back' }],
+        ],
+      }),
+    });
+ }
+
+ res.sendStatus(200);
+});
+
+app.listen(process.env.PORT || 3000, () => {
+ console.log('Server is running...');
+ });
+
+// require('dotenv').config();
 // const axios = require('axios');
-// const qs = require('querystring');
-// const path = require("path")
-// const app = express();
+// const { Markup } = require('telegraf');
+// const { Telegraf } = require('telegraf');
+// const bot = new Telegraf(process.env.TOKEN);
 
-// const api_key = (process.env.TOKEN);
-// const bot_url = `https://api.telegram.org/bot${api_key}`;
+// bot.start((ctx) => ctx.reply('Main menu:', {
+//   reply_markup: {
+//     keyboard: [['Back'],  ['Service'],],
+//     resize_keyboard: true,
+//   },
+// }));
 
-// app.use(express.json());
-
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, '/index.html'));
+// bot.command('menu', (ctx) => {
+//   ctx.reply('Main menu:', {
+//     reply_markup: {
+//       keyboard: [['Back'],  ['Service'],],
+//       resize_keyboard: true,
+//     },
+//   });
+// });
+// bot.command('service', (ctx) => {
+//   ctx.reply('Main menu:', {
+//     reply_markup: {
+//       keyboard: [['Back'],  ['Website'],],
+//       resize_keyboard: true,
+//     },
+//   });
+// });
+// bot.command('back', (ctx) => {
+//   ctx.reply('Main menu:', {
+//     reply_markup: {
+//       keyboard: [['Back']],
+//       resize_keyboard: true,
+//     },
+//   });
 // });
 
-// app.post('/' + api_key + '/api', async (req, res) => {
-//  const update = req.body;
-
-//  const chatId = update.message.chat.id;
-//  const text = update.message.text;
-
-//  if (text === '/start') {
-//     await axios.post(bot_url + '/sendMessage', {
-//       chat_id: chatId,
-//       text: 'Welcome to our bot!',
-//       reply_markup: JSON.stringify({
-//         inline_keyboard: [
-//           [
-//             { text: 'Menu 1', callback_data: 'menu1' },
-//             { text: 'Menu 2', callback_data: 'menu2' },
-//           ],
-//           [{ text: 'Back', callback_data: 'back' }],
-//         ],
-//       }),
+// bot.on('text', async (ctx) => {
+//   if (ctx.message.text === 'Back') {
+//     ctx.reply('Main menu:', {
+//       reply_markup: {
+//         keyboard: [['Back'],  ['Website'],],
+//         resize_keyboard: true,
+//       },
 //     });
-//  } else if (text.includes('menu1')) {
-//     // Code for Menu 1
-//  } else if (text.includes('menu2')) {
-//     // Code for Menu 2
-//  } else if (text.includes('back')) {
-//     await axios.post(bot_url + '/sendMessage', {
-//       chat_id: chatId,
-//       text: 'Welcome back to the main menu!',
-//       reply_markup: JSON.stringify({
-//         inline_keyboard: [
-//           [
-//             { text: 'Menu 1', callback_data: 'menu1' },
-//             { text: 'Menu 2', callback_data: 'menu2' },
-//           ],
-//           [{ text: 'Back', callback_data: 'back' }],
-//         ],
-//       }),
+//   }else if(ctx.message.text === 'Service') {
+//     ctx.reply('Main menu:', {
+//       reply_markup: {
+//         keyboard: [['Back'],  ['Website'],],
+//         resize_keyboard: true,
+//       },
 //     });
-//  }
-
-//  res.sendStatus(200);
+//   }
 // });
 
-// app.listen(process.env.PORT || 3000, () => {
-//  console.log('Server is running...');
-// });
+// bot.launch();
