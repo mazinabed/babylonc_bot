@@ -1281,72 +1281,62 @@
 //  console.log('Server is running...');
 // // });
 
-// require('dotenv').config();
-// const axios = require('axios');
-// const { Markup } = require('telegraf');
-// const { Telegraf } = require('telegraf');
-// const bot = new Telegraf(process.env.TOKEN);
-
-// bot.start((ctx) => ctx.reply('Main menu:', {
-//   reply_markup: {
-//     keyboard: [['Back'],  ['Service'],],
-//     resize_keyboard: true,
-//   },
-// }));
-
-// bot.command('menu', (ctx) => {
-//   ctx.reply('Main menu:', {
-//     reply_markup: {
-//       keyboard: [['Back'],  ['Service'],],
-//       resize_keyboard: true,
-//     },
-//   });
-// });
-// bot.command('service', (ctx) => {
-//   ctx.reply('Main menu:', {
-//     reply_markup: {
-//       keyboard: [['Back'],  ['Website'],],
-//       resize_keyboard: true,
-//     },
-//   });
-// });
-// bot.command('back', (ctx) => {
-//   ctx.reply('Main menu:', {
-//     reply_markup: {
-//       keyboard: [['Back']],
-//       resize_keyboard: true,
-//     },
-//   });
-// });
-
-// bot.on('text', async (ctx) => {
-//   if (ctx.message.text === 'Back') {
-//     ctx.reply('Main menu:', {
-//       reply_markup: {
-//         keyboard: [['Back'],  ['Website'],],
-//         resize_keyboard: true,
-//       },
-//     });
-//   }else if(ctx.message.text === 'Service') {
-//     ctx.reply('Main menu:', {
-//       reply_markup: {
-//         keyboard: [['Back'],  ['Website'],],
-//         resize_keyboard: true,
-//       },
-//     });
-//   }
-// });
-
-// bot.launch();
-
-import { Telegraf } from "telegraf";
-import { message } from 'telegraf/filters';
-
+require('dotenv').config();
+const axios = require('axios');
+const { Markup } = require('telegraf');
+const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.TOKEN);
 
-bot.on(message("text"), ctx => ctx.reply("Hello"));
+bot.start((ctx) => ctx.reply('Main menu:', {
+  reply_markup: {
+    keyboard: [['Back'],  ['Service'],],
+    resize_keyboard: true,
+  },
+}));
 
-// Start webhook via launch method (preferred)
+bot.command('menu', (ctx) => {
+  ctx.reply('Main menu:', {
+    reply_markup: {
+      keyboard: [['Back'],  ['Service'],],
+      resize_keyboard: true,
+    },
+  });
+});
+bot.command('service', (ctx) => {
+  ctx.reply('Main menu:', {
+    reply_markup: {
+      keyboard: [['Back'],  ['Website'],],
+      resize_keyboard: true,
+    },
+  });
+});
+bot.command('back', (ctx) => {
+  ctx.reply('Main menu:', {
+    reply_markup: {
+      keyboard: [['Back']],
+      resize_keyboard: true,
+    },
+  });
+});
+
+bot.on('text', async (ctx) => {
+  if (ctx.message.text === 'Back') {
+    ctx.reply('Main menu:', {
+      reply_markup: {
+        keyboard: [['Back'],  ['Website'],],
+        resize_keyboard: true,
+      },
+    });
+  }else if(ctx.message.text === 'Service') {
+    ctx.reply('Main menu:', {
+      reply_markup: {
+        keyboard: [['Back'],  ['Website'],],
+        resize_keyboard: true,
+      },
+    });
+  }
+});
+
 bot.launch({
   webhook: {
     // Public domain for webhook; e.g.: example.com
@@ -1364,3 +1354,29 @@ bot.launch({
     //secretToken: randomAlphaNumericString,
   },
 });
+
+//  const { Telegraf } = require('telegraf');
+//  const{ message } =require('telegraf/filters');
+
+// const bot = new Telegraf(process.env.TOKEN);
+
+// bot.on(message("text"), ctx => ctx.reply("Hello"));
+
+// // Start webhook via launch method (preferred)
+// bot.launch({
+//   webhook: {
+//     // Public domain for webhook; e.g.: example.com
+//     domain: "https://babylonc-bot.vercel.app/",
+
+//     // Port to listen on; e.g.: 8080
+//     port: 3000,
+
+//     // Optional path to listen for.
+//     // `bot.secretPathComponent()` will be used by default
+//    // path: webhookPath,
+
+//     // Optional secret to be sent back in a header for security.
+//     // e.g.: `crypto.randomBytes(64).toString("hex")`
+//     //secretToken: randomAlphaNumericString,
+//   },
+// });
