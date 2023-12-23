@@ -1,6 +1,15 @@
-export * from './about';
-export * from '../website';
-export * from './host';
-export * from './Social';
-export * from './Trainging';
-export * from './Bots';
+const { about } = require('./about');
+const { website } = require('./website');
+const { host } = require('./host');
+const { Social } = require('./Social');
+const { Trainging } = require('./Trainging');
+const { Bots } = require('./Bots');
+
+module.exports = {
+  about,
+  website,
+  host,
+  Social,
+  Trainging,
+  Bots,
+};

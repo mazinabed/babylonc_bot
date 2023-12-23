@@ -1,8 +1,11 @@
-
-  {
-    "routes": [
-      { "src": "/webhook-endpoint", "dest": "https://babylonc-bot.vercel.app" },
-      { "src": "/(.*)", "dest": "/$1" }
-    ]
-  }
-  
+{
+  "version": 2,
+  "public": true,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "api/index.ts"
+    }
+  ],
+  "redirects": [{ "source": "/", "destination": "/api", "permanent": false }]
+}

@@ -15,7 +15,8 @@
     "redis": "^4.6.11",
     "telegraf": "^3.40.0",
     "telegraf-session-local": "^2.1.1",
-    "telegraf-session-redis": "^5.1.0"
+    "telegraf-session-redis": "^5.1.0",
+    "vercel": "^33.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
@@ -23,7 +24,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon src/index.js"
   },
   "author": "David Pichsenmeister (dpiTech)",
   "license": "ISC"
