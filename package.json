@@ -22,7 +22,7 @@
     "start": "node index.js",
     "dev": "nodemon src/index.js",
     "devWindows": "@powershell -Command $env:DEBUG='bot*';dotenv -- -- nodemon -e js",
-    "build": "echo 'No build step for JavaScript'",
+    "build":   "ncc build src/index.ts -o public -m",,
     "prettier": "prettier --write 'src/**/*.js'"  
 }
 }
