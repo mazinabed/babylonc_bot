@@ -1,12 +1,12 @@
-
 {
   "name": "Babylon_bot",
   "version": "1.1.0",
   "description": "Babylon center",
-  "main": "src/index.js",  
+  "main": "src/index.js",
   "author": "Babylon center",
   "homepage": "",
   "dependencies": {
+    "@vercel/ncc": "^0.38.1",
     "@vercel/node": "^3.0.11",
     "dotenv-cli": "^7.3.0",
     "telegraf": "^4.15.3",
@@ -22,7 +22,7 @@
     "start": "node index.js",
     "dev": "nodemon src/index.js",
     "devWindows": "@powershell -Command $env:DEBUG='bot*';dotenv -- -- nodemon -e js",
-    "build":   "ncc build src/index.ts -o public -m",,
-    "prettier": "prettier --write 'src/**/*.js'"  
-}
+    "build": "ncc build src/index.js -o public -m",
+    "prettier": "prettier --write 'src/**/*.js'"
+  }
 }
