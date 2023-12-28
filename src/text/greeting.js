@@ -15,7 +15,7 @@ const greeting = () => async (ctx) => {
 
   if (messageId) {
     await replyToMessage(ctx, messageId, `  اهلا وسهلا بك في بابلون!${userName} 
-  لتصفح خدماتنا.  /Services`);
+  لتصفح خدماتنا.  /services`);
   }
 };
 
