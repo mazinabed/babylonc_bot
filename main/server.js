@@ -1,7 +1,7 @@
 const { Telegraf } = require('telegraf')
  require('dotenv').config();
 
-
+ TOKEN="6456398897:AAEP2j09JLgqluudftxWMSxDujmFT4sws6g"
 
 
 let bot;
@@ -9,7 +9,7 @@ if(process.env.environment == "PRODUCTION"){ // if environment is "Production"
    bot = new Telegraf(process.env.TOKEN);
    bot.startWebhook(`/${TOKEN}`, null, 3000); // Setting webhook URL path
 } else { // Else local
-   bot = new Telegraf(process.env.TOKEN);
+   bot = new Telegraf(TOKEN);
 }
 bot.start((ctx) => ctx.reply('Welcome'))
 bot.help((ctx) => ctx.reply('Send me a sticker'))
